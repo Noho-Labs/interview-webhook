@@ -33,4 +33,23 @@ Payload shape:
 }
 ```
 
-## Seed the database
+## Database schema
+
+```
+CREATE TABLE orders (
+  id TEXT PRIMARY KEY,
+  status TEXT NOT NULL DEFAULT 'pending',
+  updated_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
+CREATE TABLE webhook_events (
+  id TEXT PRIMARY KEY,
+  provider TEXT NOT NULL,
+  event_id TEXT NOT NULL,
+  type TEXT NOT NULL,
+  payload TEXT NOT NULL,
+  received_at TEXT NOT NULL DEFAULT (datetime('now')),
+  processed_at TEXT NULL,
+  processing_error TEXT NULL
+);
+```
