@@ -1,12 +1,18 @@
+from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from app.webhooks import router as webhook_router
 from app.db import init_db
 
-app = FastAPI(title="Webhook Service")
 
-@app.on_event("startup")
-def _startup():
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Startup: Initialize database
     init_db()
+    yield
+    # Shutdown: cleanup (none needed for this app)
+
+
+app = FastAPI(title="Webhook Service", lifespan=lifespan)
 
 app.include_router(webhook_router, prefix="/webhooks")
 

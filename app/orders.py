@@ -1,5 +1,5 @@
 import uuid
-from datetime import datetime
+from datetime import datetime, UTC
 from sqlalchemy.orm import Session
 from sqlalchemy import select
 from app.models import Order
@@ -10,4 +10,4 @@ def mark_order_paid(db: Session, order_id: uuid.UUID) -> None:
         raise ValueError("order_not_found")
 
     order.status = "paid"
-    order.updated_at = datetime.utcnow()
+    order.updated_at = datetime.now(UTC)
