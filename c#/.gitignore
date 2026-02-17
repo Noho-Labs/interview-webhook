@@ -1,0 +1,12 @@
+## .NET / C#
+bin/
+obj/
+*.user
+*.suo
+.vs/
+*.db
+*.db-shm
+*.db-wal
+
+## Test results
+TestResults/
