@@ -4,9 +4,8 @@ This is an ASP.NET Core + SQLite service that ingests Stripe-like webhook events
 
 **Time: ~45 minutes coding**
 
-You may use any tools (including LLMs), but you must be able to explain your decisions and verify correctness with tests.
-
 **Timeline:**
+
 - 0-5 min: Setup, read instructions
 - 5-20 min: Part A (base feature)
 - 20-40 min: Part B (idempotency - this is the main challenge)
@@ -18,6 +17,7 @@ You may use any tools (including LLMs), but you must be able to explain your dec
 ## Setup
 
 ### Prerequisites
+
 - .NET 8 SDK (`dotnet --version`)
 - SQLite (comes with the package — no separate install needed)
 
@@ -43,7 +43,7 @@ This creates sample orders with known IDs you can reference in webhook payloads.
 
 ```bash
 cd WebhookService.Tests
-dotnet test -v
+dotnet test
 ```
 
 ---
@@ -140,6 +140,7 @@ var orderIdStr = stripeEvent.Data
 ```
 
 ### Expected Behavior (Minimum for Part A)
+
 - ✅ Event persisted to `webhook_events` table
 - ✅ Order status updated to `paid`
 - ✅ Returns `200 OK`
@@ -170,6 +171,7 @@ Update your implementation to:
 - Catch that exception and return `WebhookResponse { Ok = true, Duplicate = true }` instead
 
 ### Expected Behavior
+
 - ✅ First request: processes normally, marks order paid
 - ✅ Second request with same `event.id`: returns `200 OK` but doesn't reprocess
 - ✅ Concurrent requests: only one processes, others detect duplicate
@@ -214,6 +216,7 @@ CREATE TABLE webhook_events (
 ## Evaluation Criteria (for interviewers)
 
 ### Strong Senior Behaviors
+
 - ✅ Clarifies requirements and edge cases upfront
 - ✅ Works test-first or adds tests early
 - ✅ Leverages DB constraints for correctness (unique constraint)
@@ -224,6 +227,7 @@ CREATE TABLE webhook_events (
 - ✅ Can explain failure modes and tradeoffs
 
 ### Red Flags
+
 - ❌ No tests for duplicates or edge cases
 - ❌ In-memory deduplication only (breaks across instances)
 - ❌ Updates order before ensuring event uniqueness (race condition)

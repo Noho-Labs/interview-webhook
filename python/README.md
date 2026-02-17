@@ -4,8 +4,6 @@ This is a FastAPI + SQLite service that ingests Stripe-like webhook events and u
 
 **Time: ~45 minutes coding**
 
-You may use any tools (including LLMs), but you must be able to explain your decisions and verify correctness with tests.
-
 **Timeline:**
 
 - 0-5 min: Setup, read instructions
