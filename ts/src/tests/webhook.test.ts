@@ -9,20 +9,20 @@
  */
 
 import request from 'supertest';
-import Database from 'better-sqlite3';
+import { DatabaseSync } from 'node:sqlite';
 import { createApp } from '../main';
 import { initDbSchema } from '../db';
 import { Order, WebhookEvent } from '../models';
 
-function createTestDb(): Database.Database {
-  const db = new Database(':memory:');
+function createTestDb(): DatabaseSync {
+  const db = new DatabaseSync(':memory:');
   initDbSchema(db);
   return db;
 }
 
-function seedOrder(db: Database.Database, id: string, status: string): Order {
+function seedOrder(db: DatabaseSync, id: string, status: string): Order {
   db.prepare('INSERT INTO orders (id, status) VALUES (?, ?)').run(id, status);
-  return db.prepare<string, Order>('SELECT * FROM orders WHERE id = ?').get(id)!;
+  return db.prepare('SELECT * FROM orders WHERE id = ?').get(id) as Order;
 }
 
 // =============================================================================
@@ -116,23 +116,23 @@ test.skip('duplicate webhook: second request is a no-op', async () => {
 // Helper assertions
 // =============================================================================
 
-function assertOrderPaid(db: Database.Database, orderId: string): void {
-  const order = db.prepare<string, Order>('SELECT * FROM orders WHERE id = ?').get(orderId);
+function assertOrderPaid(db: DatabaseSync, orderId: string): void {
+  const order = db.prepare('SELECT * FROM orders WHERE id = ?').get(orderId) as Order | undefined;
   expect(order).not.toBeNull();
   expect(order!.status).toBe('paid');
 }
 
-function assertWebhookStored(db: Database.Database, eventId: string): WebhookEvent {
+function assertWebhookStored(db: DatabaseSync, eventId: string): WebhookEvent {
   const event = db
-    .prepare<string, WebhookEvent>('SELECT * FROM webhook_events WHERE event_id = ?')
-    .get(eventId);
+    .prepare('SELECT * FROM webhook_events WHERE event_id = ?')
+    .get(eventId) as WebhookEvent | undefined;
   expect(event).not.toBeNull();
   return event!;
 }
 
-function countWebhooksForEvent(db: Database.Database, eventId: string): number {
+function countWebhooksForEvent(db: DatabaseSync, eventId: string): number {
   const row = db
-    .prepare<string, { count: number }>('SELECT COUNT(*) as count FROM webhook_events WHERE event_id = ?')
-    .get(eventId);
+    .prepare('SELECT COUNT(*) as count FROM webhook_events WHERE event_id = ?')
+    .get(eventId) as { count: number } | undefined;
   return row!.count;
 }

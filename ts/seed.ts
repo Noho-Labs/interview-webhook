@@ -45,13 +45,16 @@ async function seedOrders(): Promise<void> {
   }
 
   const insert = db.prepare('INSERT INTO orders (id, status) VALUES (?, ?)');
-  const insertMany = db.transaction((orders: typeof TEST_ORDERS) => {
-    for (const order of orders) {
+  db.exec('BEGIN');
+  try {
+    for (const order of TEST_ORDERS) {
       insert.run(order.id, order.status);
     }
-  });
-
-  insertMany(TEST_ORDERS);
+    db.exec('COMMIT');
+  } catch (e) {
+    db.exec('ROLLBACK');
+    throw e;
+  }
 
   console.log('\nSuccessfully seeded orders:');
   console.log('\n' + '─'.repeat(55));

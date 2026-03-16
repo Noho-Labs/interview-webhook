@@ -1,8 +1,8 @@
 import { Router, Request, Response } from 'express';
-import Database from 'better-sqlite3';
+import { DatabaseSync } from 'node:sqlite';
 import { StripeEvent, WebhookResponse } from './schemas';
 
-export function createWebhookRouter(db: Database.Database): Router {
+export function createWebhookRouter(db: DatabaseSync): Router {
   const router = Router();
 
   router.post('/stripe', (req: Request, res: Response) => {
@@ -15,7 +15,7 @@ export function createWebhookRouter(db: Database.Database): Router {
      * See README.md for detailed requirements.
      *
      * Useful imports already available:
-     *   - db          — better-sqlite3 Database instance
+     *   - db          — node:sqlite DatabaseSync instance
      *   - markOrderPaid(db, orderId) — from ./orders
      *   - v4 as uuidv4 — from 'uuid'
      */

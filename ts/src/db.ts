@@ -1,21 +1,21 @@
-import Database from 'better-sqlite3';
+import { DatabaseSync } from 'node:sqlite';
 import path from 'path';
 
 const DB_PATH = process.env.DB_PATH || path.join(process.cwd(), 'app.db');
 
-let _db: Database.Database | null = null;
+let _db: DatabaseSync | null = null;
 
-export function getDb(): Database.Database {
+export function getDb(): DatabaseSync {
   if (!_db) {
-    _db = new Database(DB_PATH);
-    _db.pragma('journal_mode = WAL');
-    _db.pragma('foreign_keys = ON');
+    _db = new DatabaseSync(DB_PATH);
+    _db.exec('PRAGMA journal_mode = WAL');
+    _db.exec('PRAGMA foreign_keys = ON');
     initDbSchema(_db);
   }
   return _db;
 }
 
-export function initDbSchema(db: Database.Database): void {
+export function initDbSchema(db: DatabaseSync): void {
   db.exec(`
     CREATE TABLE IF NOT EXISTS orders (
       id TEXT PRIMARY KEY,

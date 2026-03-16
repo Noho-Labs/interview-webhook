@@ -1,10 +1,10 @@
-import Database from 'better-sqlite3';
+import { DatabaseSync } from 'node:sqlite';
 import { Order } from './models';
 
-export function markOrderPaid(db: Database.Database, orderId: string): void {
-  const order = db.prepare<string, Order>(
+export function markOrderPaid(db: DatabaseSync, orderId: string): void {
+  const order = db.prepare(
     'SELECT * FROM orders WHERE id = ?'
-  ).get(orderId);
+  ).get(orderId) as Order | undefined;
 
   if (!order) {
     throw new Error('order_not_found');

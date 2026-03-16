@@ -10,12 +10,10 @@
     "seed": "tsx seed.ts"
   },
   "dependencies": {
-    "better-sqlite3": "^9.6.0",
     "express": "^4.21.0",
     "uuid": "^10.0.0"
   },
   "devDependencies": {
-    "@types/better-sqlite3": "^7.6.12",
     "@types/express": "^4.17.21",
     "@types/jest": "^29.5.13",
     "@types/node": "^22.0.0",
