@@ -18,7 +18,7 @@ This is an Express + SQLite service that ingests Stripe-like webhook events and 
 
 ### Prerequisites
 
-- Node.js 18+
+- Node.js 22+
 - npm
 
 ### Install dependencies
@@ -282,7 +282,7 @@ src/
 ├── orders.ts            # Helper: markOrderPaid(db, orderId)
 ├── models.ts            # TypeScript interfaces (Order, WebhookEvent)
 ├── schemas.ts           # Request/response types (StripeEvent, WebhookResponse)
-├── db.ts                # Database setup (better-sqlite3)
+├── db.ts                # Database setup (node:sqlite)
 └── tests/
     └── webhook.test.ts  # TODO: Add/update tests
 seed.ts                  # Seed script for test data
@@ -322,8 +322,8 @@ seed.ts                  # Seed script for test data
 - Check `src/orders.ts` for the `markOrderPaid()` helper function
 - Look at `src/models.ts` to see the TypeScript interfaces
 - The `WebhookResponse` type has fields you can use: `ok`, `duplicate`, `processed`, `error`
-- better-sqlite3 is **synchronous** — no async/await needed for DB calls
-- Use `db.transaction(fn)` to wrap multiple statements atomically
+- `node:sqlite` is **synchronous** — no async/await needed for DB calls
+- Use explicit `BEGIN`/`COMMIT` to wrap multiple statements atomically
 
 ---
 

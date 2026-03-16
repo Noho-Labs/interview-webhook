@@ -1,9 +1,9 @@
 import express, { Express } from 'express';
-import Database from 'better-sqlite3';
+import { DatabaseSync } from 'node:sqlite';
 import { getDb } from './db';
 import { createWebhookRouter } from './webhooks';
 
-export function createApp(db?: Database.Database): Express {
+export function createApp(db?: DatabaseSync): Express {
   const app = express();
   app.use(express.json());
 

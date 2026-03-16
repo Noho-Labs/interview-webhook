@@ -22,7 +22,7 @@ function createTestDb(): DatabaseSync {
 
 function seedOrder(db: DatabaseSync, id: string, status: string): Order {
   db.prepare('INSERT INTO orders (id, status) VALUES (?, ?)').run(id, status);
-  return db.prepare('SELECT * FROM orders WHERE id = ?').get(id) as Order;
+  return db.prepare('SELECT * FROM orders WHERE id = ?').get(id) as unknown as Order;
 }
 
 // =============================================================================
